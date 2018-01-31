@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 // ErrNoTagsFound is the error returned by ReadFrom when the metadata format
@@ -34,7 +35,7 @@ func ReadFrom(r io.ReadSeeker) (Metadata, error) {
 		return nil, err
 	}
 
-	_, err = r.Seek(-11, os.SEEK_CUR)
+	_, err = r.Seek(-11, io.SeekCurrent)
 	if err != nil {
 		return nil, fmt.Errorf("could not seek back to original position: %v", err)
 	}
@@ -75,6 +76,8 @@ const (
 	ID3v2_4       Format = "ID3v2.4" // ID3v2.4 tag format.
 	MP4           Format = "MP4"     // MP4 tag (atom) format (see http://www.ftyps.com/ for a full file type list)
 	VORBIS        Format = "VORBIS"  // Vorbis Comment tag format.
+
+	ASF			  Format = "ASF"
 )
 
 // FileType is an enumeration of the audio file types supported by this package, in particular
@@ -92,6 +95,15 @@ const (
 	ALAC            FileType = "ALAC" // Apple Lossless file FIXME: actually detect this
 	FLAC            FileType = "FLAC" // FLAC file
 	OGG             FileType = "OGG"  // OGG file
+
+	APE				 FileType = "APE" //Monkey's Audio
+	OFR				 FileType = "OFR" //OptimFROG
+	TAK				 FileType = "TAK" //Tom's verlustfreier Audiokompressor
+	WV					 FileType = "WV"  //WevPack
+	TTA				 FileType = "TTA" //True Audio
+	WMAL            FileType = "WMAL" //Windows Media Audio Lossless
+	AAC				 FileType = "AAC" //Advanced Audio Coding
+	WMA				 FileType = "WMA" //Windows Media Audio
 )
 
 // Metadata is an interface which is used to describe metadata retrieved by this package.
@@ -134,6 +146,21 @@ type Metadata interface {
 
 	// Lyrics returns the lyrics, or an empty string if unavailable.
 	Lyrics() string
+
+
+	Duration() time.Duration
+
+	Comment() string
+
+	Performer() string
+
+	EncodedBy() string
+
+	EncoderSettings() string
+
+	Encoding() FileType
+
+	EncodingBitRate() int
 
 	// Raw returns the raw mapping of retrieved tag names and associated values.
 	// NB: tag/atom names are not standardised between formats.

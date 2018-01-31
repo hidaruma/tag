@@ -287,6 +287,10 @@ func (m metadataMP4) Composer() string {
 	return m.getString(atoms.Name("composer"))
 }
 
+func (m metadataMP4) Performer() string {
+	return ""
+}
+
 func (m metadataMP4) Genre() string {
 	return m.getString(atoms.Name("genre"))
 }

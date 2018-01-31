@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // id3v1Genres is a list of genres as given in the ID3v1 specification.
@@ -44,7 +45,7 @@ var ErrNotID3v1 = errors.New("invalid ID3v1 header")
 // ReadID3v1Tags reads ID3v1 tags from the io.ReadSeeker.  Returns ErrNotID3v1
 // if there are no ID3v1 tags, otherwise non-nil error if there was a problem.
 func ReadID3v1Tags(r io.ReadSeeker) (Metadata, error) {
-	_, err := r.Seek(-128, os.SEEK_END)
+	_, err := r.Seek(-128, io.SeekEnd)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +136,22 @@ func (m metadataID3v1) Track() (int, int) { return m["track"].(int), 0 }
 
 func (m metadataID3v1) AlbumArtist() string { return "" }
 func (m metadataID3v1) Composer() string    { return "" }
+func (m metadataID3v1) Performer() string {return ""}
 func (metadataID3v1) Disc() (int, int)      { return 0, 0 }
 func (m metadataID3v1) Picture() *Picture   { return nil }
 func (m metadataID3v1) Lyrics() string      { return "" }
+
+func (m metadataID3v1) Comment() string { return m["comment"].(string)}
+func (m metadataID3v1) Duration() time.Duration {
+
+}
+
+func (m metadataID3v1) EncodedBy() string { return "" }
+
+func (m metadataID3v1) EncoderSettings() string { return "" }
+
+func (m metadataID3v1) Encoding() FileType { return MP3 }
+
+func (m metadataID3v1) EncodingBitRate() int {
+
+}

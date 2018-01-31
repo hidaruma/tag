@@ -8,6 +8,8 @@ import (
 	"errors"
 	"io"
 	"os"
+	"time"
+	"strconv"
 )
 
 // blockType is a type which represents an enumeration of valid FLAC blocks
@@ -73,6 +75,10 @@ func (m *metadataFLAC) readFLACMetadataBlock(r io.ReadSeeker) (last bool, err er
 	}
 
 	switch blockType(blockHeader[0]) {
+
+	case streamInfoBlock:
+		err = m.readStreamInfo(r)
+
 	case vorbisCommentBlock:
 		err = m.readVorbisComment(r)
 
@@ -80,11 +86,55 @@ func (m *metadataFLAC) readFLACMetadataBlock(r io.ReadSeeker) (last bool, err er
 		err = m.readPictureBlock(r)
 
 	default:
-		_, err = r.Seek(int64(blockLen), os.SEEK_CUR)
+		_, err = r.Seek(int64(blockLen), io.SeekCurrent)
 	}
 	return
 }
 
+func (m *metadataFLAC) readStramInfo(r io.Reader) error {
+	streamInfoLen, err := readInt32LittleEndian(r)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < streamInfoLen; i++ {
+	metaHeader :=
+
+	}
+
+	m.c["duration"] = strconv.Itoa(duration)
+	m.c["channels"] = strconv.Itoa(numChannels)
+	m.c["bitrate"] = strconv.Itoa(bitrate)
+	return nil
+}
+
 func (m *metadataFLAC) FileType() FileType {
 	return FLAC
+}
+
+func (m *metadataFLAC) Duration() time.Duration {
+
+}
+
+func (m *metadataFLAC) Encoding() FileType {
+
+}
+
+func (m *metadataFLAC) EncodedBy() string {
+
+}
+
+func (m *metadataFLAC) EncoderSettings() string {
+
+}
+
+func (m *metadataFLAC) EncodingBitRate() int {
+
+}
+
+func (m *metadataFLAC) duration() int {
+
+}
+
+func (m *metadataFLAC) bitrate() int {
+
 }

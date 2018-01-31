@@ -10,6 +10,7 @@ import (
 	"io"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func newMetadataVorbis() *metadataVorbis {
@@ -200,9 +201,20 @@ func (m *metadataVorbis) Genre() string {
 	return m.c["genre"]
 }
 
+func (m *metadataVorbis) Performer() string {
+	if m.c["performer"] != "" {
+		return m.c["performer"]
+	}
+	return m.c["artist"]
+}
+
 func (m *metadataVorbis) Year() int {
-	// FIXME: try to parse the date in m.c["date"] to extract this
-	return 0
+	date := m.c["date"]
+	year, err := strconv.Atoi(date[:3])
+	if err != nil {
+		return 0
+	}
+	return year
 }
 
 func (m *metadataVorbis) Track() (int, int) {
@@ -226,3 +238,28 @@ func (m *metadataVorbis) Lyrics() string {
 func (m *metadataVorbis) Picture() *Picture {
 	return m.p
 }
+
+func (m *metadataVorbis) Comment() string {
+	return m.c["comment"]
+}
+/*
+func (m *metadataVorbis) Duration() time.Duration {
+
+}
+
+func (m *metadataVorbis) EncodedBy() string {
+
+}
+
+func (m *metadataVorbis) Encoding() FileType {
+
+}
+
+func (m *metadataVorbis) EncoderSettings() string {
+
+}
+
+func (m *metadataVorbis) EncodingBitRate() int {
+
+}
+*/
